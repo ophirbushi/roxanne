@@ -8,6 +8,12 @@
     "type": "git",
     "url": "https://github.com/ophirbushi/roxanne.git"
   },
+  "keywords": [
+    "rxjs",
+    "redux",
+    "typescript",
+    "state-management"
+  ],
   "scripts": {
     "build": "tsc -p ."
   },
