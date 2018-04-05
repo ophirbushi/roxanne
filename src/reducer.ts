@@ -1,7 +1,7 @@
-export class Reducer<T, A> {
-    constructor(public reduce: (this: Reducer<T, A>, state: T, action: keyof A, payload: A[keyof A]) => T) { }
+export class Reducer<State, Actions> {
+    constructor(public reduce: (this: Reducer<State, Actions>, state: State, action: keyof Actions, payload: Actions[keyof Actions]) => State) { }
 
-    public is<K extends keyof A>(name: K, action: keyof A, payload?: A[keyof A]): payload is A[K] {
+    public is<K extends keyof Actions>(name: K, action: keyof Actions, payload?: Actions[keyof Actions]): payload is Actions[K] {
         return action === name;
     }
 }

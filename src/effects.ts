@@ -3,12 +3,12 @@ import { filter, map } from 'rxjs/operators';
 
 import { Store } from './store';
 
-export class Effects<T, A>{
-    store: Store<T, A>;
+export class Effects<State, Actions>{
+    store: Store<State, Actions>;
 
-    constructor(public registerEffects: (this: Effects<T, A>) => void = () => { }) { }
+    constructor(public registerEffects: (this: Effects<State, Actions>) => void = () => { }) { }
 
-    ofType<K extends keyof A>(action: K): Observable<A[K]> {
+    ofType<K extends keyof Actions>(action: K): Observable<Actions[K]> {
         return this.store.actions$
             .pipe(filter(couple => couple.action === action))
             .pipe(map(couple => <any>couple.payload));

@@ -6,14 +6,14 @@ import { map, distinctUntilChanged } from 'rxjs/operators';
 import { Reducer } from './reducer';
 import { Effects } from './effects';
 
-export class Store<T, A> extends BehaviorSubject<T> {
-    private actionDispatched = new Subject<{ action: keyof A, payload: A[keyof A] }>();
-    actions$: Observable<{ action: keyof A, payload: A[keyof A] }> = this.actionDispatched.asObservable();
+export class Store<State, Actions> extends BehaviorSubject<State> {
+    private actionDispatched = new Subject<{ action: keyof Actions, payload: Actions[keyof Actions] }>();
+    actions$: Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> = this.actionDispatched.asObservable();
 
     constructor(
-        initialValue: T,
-        private reducer: Reducer<T, A>,
-        private effects?: Effects<T, A>
+        initialValue: State,
+        private reducer: Reducer<State, Actions>,
+        private effects?: Effects<State, Actions>
     ) {
         super(initialValue);
 
@@ -23,15 +23,15 @@ export class Store<T, A> extends BehaviorSubject<T> {
         }
     }
 
-    dispatch<ActionType extends keyof A>(action: ActionType, payload: A[ActionType]) {
+    dispatch<ActionType extends keyof Actions>(action: ActionType, payload: Actions[ActionType]) {
         this.next(this.reducer.reduce(this.value, action, payload));
         this.actionDispatched.next({ action, payload });
     }
 
-    select<K extends keyof T>(key: K): Observable<T[K]>
-    select<K extends keyof T>(mapFunction: (value: T) => T[K]): Observable<T[K]>
-    select<K extends keyof T>(keyOrMapFn: (K) | ((value: T) => T[K])): Observable<T[K]> {
-        const mapFn: (value: T) => T[K] = typeof keyOrMapFn === 'string' ? value => value[keyOrMapFn] : keyOrMapFn;
+    select<K extends keyof State>(key: K): Observable<State[K]>
+    select<K extends keyof State>(mapFunction: (value: State) => State[K]): Observable<State[K]>
+    select<K extends keyof State>(keyOrMapFn: (K) | ((value: State) => State[K])): Observable<State[K]> {
+        const mapFn: (value: State) => State[K] = typeof keyOrMapFn === 'string' ? value => value[keyOrMapFn] : keyOrMapFn;
         return this.asObservable()
             .pipe(map(mapFn))
             .pipe(distinctUntilChanged());
