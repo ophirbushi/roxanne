@@ -11,11 +11,11 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
     actions$: Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> = this.actionDispatched.asObservable();
 
     constructor(
-        initialValue: State,
+        initialState: State,
         private reducer: Reducer<State, Actions>,
         private effects?: Effects<State, Actions>
     ) {
-        super(initialValue);
+        super(initialState);
 
         if (this.effects) {
             this.effects.store = this;
