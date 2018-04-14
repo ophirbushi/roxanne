@@ -33,7 +33,9 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
     select<K extends keyof State>(keyOrMapFn: (K) | ((value: State) => State[K])): Observable<State[K]> {
         const mapFn: (value: State) => State[K] = typeof keyOrMapFn === 'string' ? value => value[keyOrMapFn] : keyOrMapFn;
         return this.asObservable()
-            .pipe(map(mapFn))
-            .pipe(distinctUntilChanged());
+            .pipe(
+                map(mapFn),
+                distinctUntilChanged()
+            );
     }
 }

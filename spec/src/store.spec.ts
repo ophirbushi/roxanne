@@ -1,5 +1,7 @@
 import { Store, Reducer, Effects } from '../../src';
 import { Subject } from 'rxjs/Subject';
+import { take } from 'rxjs/operators/take';
+import { Observable } from 'rxjs/Observable';
 
 interface Calculator {
     currentNumber: number;
@@ -65,6 +67,41 @@ describe('store', () => {
             store.dispatch('add', 2);
             expect(spy.calls.count()).toBe(2);
             expect(spy.calls.mostRecent().args[0]).toBe('added 2');
+        });
+
+        describe('ofType', () => {
+            it('should emit matching actions', () => {
+                let emitted = false;
+
+                effects.ofType('reset')
+                    .pipe(take(1))
+                    .subscribe(() => emitted = true);
+
+                store.dispatch('reset', null);
+                expect(emitted).toBe(true);
+            });
+
+            it('should not emit non matching actions', () => {
+                let emitted = false;
+
+                effects.ofType('reset')
+                    .pipe(take(1))
+                    .subscribe(() => emitted = true);
+
+                store.dispatch('add', 1);
+                expect(emitted).toBe(false);
+            });
+
+            it(`should emit the action's payload`, () => {
+                let emittedValue;
+
+                effects.ofType('subtract')
+                    .pipe(take(1))
+                    .subscribe((value) => emittedValue = value);
+
+                store.dispatch('subtract', 1);
+                expect(emittedValue).toBe(1);
+            });
         });
     });
 });

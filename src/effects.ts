@@ -10,7 +10,9 @@ export class Effects<State, Actions>{
 
     ofType<K extends keyof Actions>(action: K): Observable<Actions[K]> {
         return this.store.actions$
-            .pipe(filter(couple => couple.action === action))
-            .pipe(map(couple => <any>couple.payload));
+            .pipe(
+                filter(couple => couple.action === action),
+                map(couple => <any>couple.payload)
+            );
     }
 }
