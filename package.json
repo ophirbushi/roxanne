@@ -1,6 +1,6 @@
 {
   "name": "roxanne",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "roxanne is an implementation of the Redux pattern using rxjs.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
