@@ -5,8 +5,10 @@ import { Reducer } from './reducer';
 import { Effects } from './effects';
 
 export class Store<State, Actions> extends BehaviorSubject<State> {
-    private actionDispatched = new Subject<{ action: keyof Actions, payload: Actions[keyof Actions] }>();
-    actions$: Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> = this.actionDispatched.asObservable();
+    private _actions$ = new Subject<{ action: keyof Actions, payload: Actions[keyof Actions] }>();
+    get actions$(): Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> {
+        return this._actions$.asObservable();
+    }
 
     constructor(
         initialState: State,
@@ -23,7 +25,7 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
 
     dispatch<ActionType extends keyof Actions>(action: ActionType, payload: Actions[ActionType]) {
         this.next(this.reducer.reduce(this.value, action, payload));
-        this.actionDispatched.next({ action, payload });
+        this._actions$.next({ action, payload });
     }
 
     select<K extends keyof State>(key: K): Observable<State[K]>
