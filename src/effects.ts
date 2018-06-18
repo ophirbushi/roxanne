@@ -1,6 +1,5 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-
 import { Store } from './store';
 
 export class Effects<State, Actions>{
@@ -12,7 +11,7 @@ export class Effects<State, Actions>{
         return this.store.actions$
             .pipe(
                 filter(couple => couple.action === action),
-                map(couple => <any>couple.payload)
+                map(couple => <Actions[K]>couple.payload)
             );
     }
 }

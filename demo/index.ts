@@ -1,10 +1,4 @@
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
-import { Observable } from 'rxjs/Observable';
-
+import { switchMap } from 'rxjs/operators';
 import { Store, Effects, Reducer } from '../src';
 
 class DATA {
@@ -55,7 +49,6 @@ const reducer = new Reducer<NameStore, NameStoreActions>(
     }
 );
 
-import 'rxjs/add/operator/switchMap';
 
 const effects = new Effects<NameStore, NameStoreActions>(
     function () {
@@ -72,7 +65,7 @@ const effects = new Effects<NameStore, NameStoreActions>(
                 this.store.dispatch(DATA.fetch, payload);
             });
         this.ofType(DATA.fetch)
-            .switchMap((payload) => Promise.resolve([payload.length, payload.length + 1, 12]))
+            .pipe(switchMap((payload) => Promise.resolve([payload.length, payload.length + 1, 12])))
             .subscribe(payload => this.store.dispatch(DATA.success, payload));
     }
 );

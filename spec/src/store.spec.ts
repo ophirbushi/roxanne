@@ -1,7 +1,6 @@
 import { Store, Reducer, Effects } from '../../src';
-import { Subject } from 'rxjs/Subject';
-import { take } from 'rxjs/operators/take';
-import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 interface Calculator {
     currentNumber: number;

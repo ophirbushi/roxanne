@@ -1,6 +1,4 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
 import { Reducer } from './reducer';
@@ -31,10 +29,10 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
     select<K extends keyof State>(key: K): Observable<State[K]>
     select<K extends keyof State>(mapFunction: (value: State) => State[K]): Observable<State[K]>
     select<K extends keyof State>(keyOrMapFn: (K) | ((value: State) => State[K])): Observable<State[K]> {
-        const mapFn: (value: State) => State[K] = typeof keyOrMapFn === 'string' ? value => value[keyOrMapFn] : keyOrMapFn;
+        const mapFn: any = typeof keyOrMapFn === 'string' ? value => value[keyOrMapFn] : keyOrMapFn;
         return this.asObservable()
             .pipe(
-                map(mapFn),
+                map((mapFn) as () => any),
                 distinctUntilChanged()
             );
     }
