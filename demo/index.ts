@@ -1,5 +1,5 @@
 import { switchMap } from 'rxjs/operators';
-import { Store, Effects, Reducer } from '../src';
+import { Store,  Reducer } from '../src';
 
 class DATA {
     static load: 'DATA load' = 'DATA load';
@@ -49,28 +49,26 @@ const reducer = new Reducer<NameStore, NameStoreActions>(
     }
 );
 
+const store = new Store<NameStore, NameStoreActions>({ name: null, size: null, data: null }, reducer);
 
-const effects = new Effects<NameStore, NameStoreActions>(
-    function () {
-        this.ofType(SET_NAME)
-            .subscribe((payload) => {
-                store.dispatch(SHORTEN_NAME, 1);
-            });
-        this.ofType(SET_SIZE)
-            .subscribe((payload) => {
-                this.store.dispatch(SET_NAME, 'now we are ' + payload);
-            });
-        this.ofType(DATA.load)
-            .subscribe((payload) => {
-                this.store.dispatch(DATA.fetch, payload);
-            });
-        this.ofType(DATA.fetch)
-            .pipe(switchMap((payload) => Promise.resolve([payload.length, payload.length + 1, 12])))
-            .subscribe(payload => this.store.dispatch(DATA.success, payload));
-    }
-);
+store.actionOfType(SET_NAME)
+    .subscribe(() => {
+        store.dispatch(SHORTEN_NAME, 1);
+    });
+store.actionOfType(SET_SIZE)
+    .subscribe((payload) => {
+        this.store.dispatch(SET_NAME, 'now we are ' + payload);
+    });
+store.actionOfType(DATA.load)
+    .subscribe((payload) => {
+        this.store.dispatch(DATA.fetch, payload);
+    });
+store.actionOfType(DATA.fetch)
+    .pipe(switchMap((payload) => Promise.resolve([payload.length, payload.length + 1, 12])))
+    .subscribe(payload => this.store.dispatch(DATA.success, payload));
 
-const store = new Store<NameStore, NameStoreActions>({ name: null, size: null, data: null }, reducer, effects);
+
+
 
 store.subscribe(console.log)
 

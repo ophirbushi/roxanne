@@ -1,6 +1,5 @@
-import { Store, Reducer, Effects } from '../../src';
-import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { Store, Reducer } from '../../src';
 
 interface Calculator {
     currentNumber: number;
@@ -12,20 +11,10 @@ interface CalculatorActions {
     reset: null;
 }
 
-class Logger {
-    logged: Subject<string> = new Subject();
-
-    log(x: string) {
-        this.logged.next(x)
-    }
-}
-
 describe('store', () => {
     let initialState: Calculator
     let reducer: Reducer<Calculator, CalculatorActions>;
-    let effects: Effects<Calculator, CalculatorActions>;
     let store: Store<Calculator, CalculatorActions>;
-    let logger: Logger;
 
     beforeEach(() => {
         initialState = { currentNumber: 0 };
@@ -37,14 +26,7 @@ describe('store', () => {
                 return state;
             }
         );
-        effects = new Effects(
-            function () {
-                this.ofType('add')
-                    .subscribe(payload => logger.log(`added ${payload}`));
-            }
-        )
-        store = new Store<Calculator, CalculatorActions>(initialState, reducer, effects);
-        logger = new Logger();
+        store = new Store<Calculator, CalculatorActions>(initialState, reducer);
     });
 
     it('should not throw', () => {
@@ -59,20 +41,12 @@ describe('store', () => {
         });
     });
 
-    describe('effects', () => {
-        it('should work', () => {
-            const spy = spyOn(logger, 'log');
-            store.dispatch('add', 3);
-            store.dispatch('add', 2);
-            expect(spy.calls.count()).toBe(2);
-            expect(spy.calls.mostRecent().args[0]).toBe('added 2');
-        });
-
-        describe('ofType', () => {
+    describe('store', () => {
+        describe('actionOfType', () => {
             it('should emit matching actions', () => {
                 let emitted = false;
 
-                effects.ofType('reset')
+                store.actionOfType('reset')
                     .pipe(take(1))
                     .subscribe(() => emitted = true);
 
@@ -83,7 +57,7 @@ describe('store', () => {
             it('should not emit non matching actions', () => {
                 let emitted = false;
 
-                effects.ofType('reset')
+                store.actionOfType('reset')
                     .pipe(take(1))
                     .subscribe(() => emitted = true);
 
@@ -94,7 +68,7 @@ describe('store', () => {
             it(`should emit the action's payload`, () => {
                 let emittedValue;
 
-                effects.ofType('subtract')
+                store.actionOfType('subtract')
                     .pipe(take(1))
                     .subscribe((value) => emittedValue = value);
 
