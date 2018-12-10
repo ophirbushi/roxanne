@@ -158,7 +158,7 @@ For example:
 ```ts
 import { calculatorInitialState } from './calculator.init';
 
-const calculatorStore = new Store<CalculatorState, CalculatorActions>(calculatorInitialState, calculatorReducer, calculatorEffects);
+const calculatorStore = new Store<CalculatorState, CalculatorActions>(calculatorInitialState, calculatorReducer, [calculatorEffects]);
 ```
 
 And using it:
