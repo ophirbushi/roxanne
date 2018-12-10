@@ -19,7 +19,7 @@ npm install roxanne rxjs
 
 ## Usage
 
-This are the main objects used in the library: 
+These are the main objects used in the library: 
 
 * State
 * Actions
