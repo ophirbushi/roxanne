@@ -120,7 +120,7 @@ const calculatorEffects = new Effects<CalculatorState, CalculatorActions>(
             });
 
         merge(this.ofType('add'), this.ofType('subtract'))
-            .pipe(filter((payload) => payload === NaN)
+            .pipe(filter((payload) => isNaN(payload))
             .subscribe((payload) => {
                 console.log(`payload is NaN! Resetting calculator...`);
                 this.store.dispatch('reset', null);
