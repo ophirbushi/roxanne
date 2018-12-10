@@ -1,6 +1,6 @@
 {
   "name": "roxanne",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "roxanne is an implementation of the Redux pattern using rxjs.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,12 +24,12 @@
   "author": "Ophir Bushinsky",
   "license": "MIT",
   "peerDependencies": {
-    "rxjs": ">=6.0.0"
+    "rxjs": ">=6.3.3"
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.6",
     "jasmine": "^3.1.0",
-    "rxjs": "^6.0.0",
+    "rxjs": "^6.3.3",
     "typescript": "^2.8.1"
   }
 }
