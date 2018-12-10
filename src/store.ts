@@ -13,13 +13,15 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
     constructor(
         initialState: State,
         private reducer: Reducer<State, Actions>,
-        private effects?: Effects<State, Actions>
+        effects?: Effects<State, Actions>[]
     ) {
         super(initialState);
 
-        if (this.effects) {
-            this.effects.store = this;
-            this.effects.registerEffects();
+        if (effects) {
+            effects.forEach(effect => {
+                effect.store = this;
+                effect.registerEffects();
+            });
         }
     }
 

@@ -43,7 +43,7 @@ describe('store', () => {
                     .subscribe(payload => logger.log(`added ${payload}`));
             }
         )
-        store = new Store<Calculator, CalculatorActions>(initialState, reducer, effects);
+        store = new Store<Calculator, CalculatorActions>(initialState, reducer, [effects]);
         logger = new Logger();
     });
 
