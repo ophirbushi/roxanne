@@ -1,6 +1,6 @@
 # roxanne
 
-roxanne is an implementation of the Redux pattern using rxjs.
+roxanne is a simple implementation of the Redux pattern using rxjs, meant to reduce the overall boilerplate which generally comes with the it.
 
 [![npm version](https://badge.fury.io/js/roxanne.svg)](https://badge.fury.io/js/roxanne)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/ophirbushi/roxanne/issues)
