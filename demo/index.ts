@@ -70,7 +70,7 @@ const effects = new Effects<NameStore, NameStoreActions>(
     }
 );
 
-const store = new Store<NameStore, NameStoreActions>({ name: null, size: null, data: null }, reducer, effects);
+const store = new Store<NameStore, NameStoreActions>({ name: null, size: null, data: null }, reducer, [effects]);
 
 store.subscribe(console.log)
 
