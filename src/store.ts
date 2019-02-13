@@ -1,28 +1,16 @@
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
-
+import { map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { Reducer } from './reducer';
-import { Effects } from './effects';
 
 export class Store<State, Actions> extends BehaviorSubject<State> {
     private _actions$ = new Subject<{ action: keyof Actions, payload: Actions[keyof Actions] }>();
-    get actions$(): Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> {
-        return this._actions$.asObservable();
-    }
+    actions$: Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> = this._actions$.asObservable();
 
     constructor(
         initialState: State,
-        private reducer: Reducer<State, Actions>,
-        effects?: Effects<State, Actions>[]
+        private reducer: Reducer<State, Actions>
     ) {
         super(initialState);
-
-        if (effects) {
-            effects.forEach(effect => {
-                effect.store = this;
-                effect.registerEffects();
-            });
-        }
     }
 
     dispatch<ActionType extends keyof Actions>(action: ActionType, payload: Actions[ActionType]) {
@@ -40,4 +28,13 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
                 distinctUntilChanged()
             );
     }
+
+     actionOfType<K extends keyof Actions>(action: K): Observable<Actions[K]> {
+        return this._actions$
+            .pipe(
+                filter(couple => couple.action === action),
+                map(couple => <Actions[K]>couple.payload)
+            );
+    }
+    
 }
