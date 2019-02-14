@@ -1,27 +1,28 @@
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
-
+import { map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { Reducer } from './reducer';
 import { Effects } from './effects';
 
 export class Store<State, Actions> extends BehaviorSubject<State> {
     private _actions$ = new Subject<{ action: keyof Actions, payload: Actions[keyof Actions] }>();
-    get actions$(): Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> {
-        return this._actions$.asObservable();
-    }
+    actions$: Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> = this._actions$.asObservable();
 
     constructor(
         initialState: State,
         private reducer: Reducer<State, Actions>,
-        effects?: Effects<State, Actions>[]
+        effects?: Effects<State, Actions> | Effects<State, Actions>[]
     ) {
         super(initialState);
 
-        if (effects) {
+        if (Array.isArray(effects)) {
             effects.forEach(effect => {
-                effect.store = this;
-                effect.registerEffects();
+                if (typeof effect !== 'function') {
+                    throw new Error('Effects need to be a function, or an array of functions.');
+                }
+                effect(this);
             });
+        } else if (typeof effects === 'function') {
+            effects(this);
         }
     }
 
@@ -38,6 +39,14 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
             .pipe(
                 map((mapFn) as () => any),
                 distinctUntilChanged()
+            );
+    }
+
+    actionOfType<K extends keyof Actions>(action: K): Observable<Actions[K]> {
+        return this._actions$
+            .pipe(
+                filter(couple => couple.action === action),
+                map(couple => <Actions[K]>couple.payload)
             );
     }
 }

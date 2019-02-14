@@ -41,7 +41,7 @@ export interface Calculator {
 
 ### Actions
 
-Actions is simply an interface whose keys are the action's type, and the value is the action's payload.
+Actions is simply an interface whose keys are the action's type, and their value is the action's payload.
 
 For example:
 
@@ -96,42 +96,29 @@ Note that the function passed to the reducer's constructor is not a lambda funct
 
 ### Effects
 
-Effects is a class responsible for the executing the store's actions' side effects. The Effects has access to the store as a class member.
-
-One creates a new Effects instance by calling its constructor, passing in as a parameter the registerEffects function, which as its name suggests registers the effects for the store, by simply subscribing to the store's actions$ observable.
-
-The Effects class has a helper method ofType() which takes an action name as an argument, and returns and observable for that action. 
+Effects is simply a function that receives the store as a parameter, and does something with it, usually subscribing to the store.actionOfType() method, but not necessarily. 
 
 For example:
 
 ```ts
-import { merge } from 'rxjs/observable/merge';
+import { Store } from 'roxanne';
+import { filter } from 'rxjs/operators';
+import { CalculatorState, CalculatorActions } from './state';
 
-const calculatorEffects = new Effects<CalculatorState, CalculatorActions>(
-    function () {
-        this.ofType('add')
-            .subscribe((payload) => {
-                console.log(`add action dispatched with payload: ${payload}.`);
-            });
+export const calculatorEffects = (store: Store<CalculatorState, CalculatorActions>) => {
 
-        this.ofType('subtract')
-            .subscribe((payload) => {
-                  console.log(`subtract action dispatched with payload: ${payload}.`);
-            });
-
-        merge(this.ofType('add'), this.ofType('subtract'))
-            .pipe(filter((payload) => isNaN(payload))
-            .subscribe((payload) => {
-                console.log(`payload is NaN! Resetting calculator...`);
-                this.store.dispatch('reset', null);
-            });
-
-        this.ofType('reset')
-            .subscribe((payload) => {
-                console.log(`reset action dispatched.`);
-            });
-    }
-);
+    store.actionOfType('add')
+        .subscribe(amount => console.log(`${amount} amount was added.`)); 
+        
+    store.actionOfType('subtract')
+        .pipe(
+            filter(amount => amount > 10000000)
+        )
+        .subscribe(() => {
+            console.log(`User subtracted too much, can't handle this. Resetting the calculator...`);
+            store.dispatch('reset', null);
+        });
+};
 ```
 
 ### Store
@@ -145,7 +132,9 @@ The store has a dispatch() method which dispatches an action, and receives 2 arg
 
 The Store has a select() method which returns an observable for parts of the state. 
 
-The Store also has an actions$ observable which emits every time an action is dispatched an object in this format: ```{ action: string, payload: any }```.
+The Store has an actions$ observable which emits every time an action is dispatched an object in this format: ```{ action: string, payload: any }```.
+
+The Store also has a convenient actionOfType() method which lets you filter specific actions easily.
 
 Call the store's constructor in order to create a new store, passing in 2 or 3 arguments:
 
