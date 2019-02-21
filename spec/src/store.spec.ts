@@ -1,4 +1,4 @@
-import { Store, Reducer } from '../../src';
+import { Store, ReducerFn, generatePayloadTypeChecker } from '../../src';
 import { Subject } from 'rxjs';
 
 interface CalculatorState {
@@ -21,20 +21,22 @@ class Logger {
 
 describe('store', () => {
     let initialState: CalculatorState
-    let reducer: Reducer<CalculatorState, CalculatorActions>;
+    let reducer: ReducerFn<CalculatorState, CalculatorActions>;
     let store: Store<CalculatorState, CalculatorActions>;
     let logger: Logger;
 
     beforeEach(() => {
         initialState = { currentNumber: 0 };
-        reducer = new Reducer<CalculatorState, CalculatorActions>(
-            function (state, action, payload) {
-                if (this.is('add', action, payload)) {
-                    return { ...state, currentNumber: state.currentNumber + payload };
-                }
-                return state;
+
+        const is = generatePayloadTypeChecker<CalculatorActions>();
+
+        reducer = function (state, action, payload) {
+            if (is('add', action, payload)) {
+                return { ...state, currentNumber: state.currentNumber + payload };
             }
-        );
+            return state;
+        };
+
         store = new Store<CalculatorState, CalculatorActions>(initialState, reducer);
         logger = new Logger();
     });

@@ -1,6 +1,6 @@
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map, distinctUntilChanged, filter } from 'rxjs/operators';
-import { Reducer } from './reducer';
+import { ReducerFn } from './reducer';
 import { Effects } from './effects';
 
 export class Store<State, Actions> extends BehaviorSubject<State> {
@@ -9,7 +9,7 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
 
     constructor(
         initialState: State,
-        private reducer: Reducer<State, Actions>,
+        private reducer: ReducerFn<State, Actions>,
         effects?: Effects<State, Actions> | Effects<State, Actions>[]
     ) {
         super(initialState);
@@ -27,7 +27,7 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
     }
 
     dispatch<ActionType extends keyof Actions>(action: ActionType, payload: Actions[ActionType]) {
-        this.next(this.reducer.reduce(this.value, action, payload));
+        this.next(this.reducer(this.value, action, payload));
         this._actions$.next({ action, payload });
     }
 
