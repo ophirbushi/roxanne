@@ -1,7 +1,6 @@
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { ReducerFn } from './reducer';
-import { Effects } from './effects';
 
 export class Store<State, Actions> extends BehaviorSubject<State> {
     private _actions$ = new Subject<{ action: keyof Actions, payload: Actions[keyof Actions] }>();
@@ -9,21 +8,9 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
 
     constructor(
         initialState: State,
-        private reducer: ReducerFn<State, Actions>,
-        effects?: Effects<State, Actions> | Effects<State, Actions>[]
+        private reducer: ReducerFn<State, Actions>
     ) {
         super(initialState);
-
-        if (Array.isArray(effects)) {
-            effects.forEach(effect => {
-                if (typeof effect !== 'function') {
-                    throw new Error('Effects need to be a function, or an array of functions.');
-                }
-                effect(this);
-            });
-        } else if (typeof effects === 'function') {
-            effects(this);
-        }
     }
 
     dispatch<ActionType extends keyof Actions>(action: ActionType, payload: Actions[ActionType]) {
