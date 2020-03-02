@@ -3,18 +3,23 @@ import { map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { ReducerFn } from './reducer';
 
 export class Store<State, Actions> extends BehaviorSubject<State> {
-    private _actions$ = new Subject<{ action: keyof Actions, payload: Actions[keyof Actions] }>();
-    actions$: Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> = this._actions$.asObservable();
+    private reducers: Array<ReducerFn<State, Actions>>;
+    private readonly _actions$ = new Subject<{ action: keyof Actions, payload: Actions[keyof Actions] }>();
+    readonly actions$: Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> = this._actions$.asObservable();
 
+    constructor(initialState: State, reducer: ReducerFn<State, Actions>)
+    constructor(initialState: State, reducers: Array<ReducerFn<State, Actions>>)
     constructor(
         initialState: State,
-        private reducer: ReducerFn<State, Actions>
+        reducerOrReducers: ReducerFn<State, Actions> | Array<ReducerFn<State, Actions>>
     ) {
         super(initialState);
+        this.reducers = typeof reducerOrReducers === 'function' ? [reducerOrReducers] : reducerOrReducers;
     }
 
     dispatch<ActionType extends keyof Actions>(action: ActionType, payload: Actions[ActionType]) {
-        this.next(this.reducer(this.value, action, payload));
+        this.next(this.reducers.reduce((updatedState, reducer) => reducer(updatedState, action, payload),
+            this.value));
         this._actions$.next({ action, payload });
     }
 
@@ -32,8 +37,8 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
     actionOfType<K extends keyof Actions>(action: K): Observable<Actions[K]> {
         return this._actions$
             .pipe(
-                filter(couple => couple.action === action),
-                map(couple => <Actions[K]>couple.payload)
+                filter(actionPayloadPair => actionPayloadPair.action === action),
+                map(actionPayloadPair => <Actions[K]>actionPayloadPair.payload)
             );
     }
 }
