@@ -5,7 +5,8 @@ import { ReducerFn } from './reducer';
 export class Store<State, Actions> extends BehaviorSubject<State> {
     private reducers: Array<ReducerFn<State, Actions>>;
     private readonly _actions$ = new Subject<{ action: keyof Actions, payload: Actions[keyof Actions] }>();
-    readonly actions$: Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> = this._actions$.asObservable();
+    readonly actions$: Observable<{ action: keyof Actions, payload: Actions[keyof Actions] }> =
+        this._actions$.asObservable();
 
     constructor(initialState: State, reducer: ReducerFn<State, Actions>)
     constructor(initialState: State, reducers: Array<ReducerFn<State, Actions>>)
@@ -18,8 +19,9 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
     }
 
     dispatch<ActionType extends keyof Actions>(action: ActionType, payload: Actions[ActionType]) {
-        this.next(this.reducers.reduce((updatedState, reducer) => reducer(updatedState, action, payload),
-            this.value));
+        this.next(
+            this.reducers.reduce((updatedState, reducer) => reducer(updatedState, action, payload), this.value)
+        );
         this._actions$.next({ action, payload });
     }
 
