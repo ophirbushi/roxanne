@@ -1,38 +1,39 @@
 {
-  "name": "roxanne",
-  "version": "3.0.0-beta.1",
-  "description": "roxanne is an implementation of the Redux pattern using rxjs.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ophirbushi/roxanne.git"
-  },
-  "keywords": [
-    "rxjs",
-    "rx",
-    "simple",
-    "redux",
-    "typescript",
-    "state",
-    "state-management"
-  ],
-  "scripts": {
-    "prebuild": "rimraf ./dist",
-    "build": "tsc -p .",
-    "pretest": "tsc -p ./spec",
-    "test": "jasmine"
-  },
-  "author": "Ophir Bushinsky",
-  "license": "MIT",
-  "peerDependencies": {
-    "rxjs": ">=6.3.3"
-  },
-  "devDependencies": {
-    "@types/jasmine": "^2.8.6",
-    "jasmine": "^3.1.0",
-    "rimraf": "^2.6.3",
-    "rxjs": "^6.5.4",
-    "typescript": "^3.8.3"
-  }
+    "name": "roxanne",
+    "version": "3.0.0-beta.1",
+    "description": "roxanne is an implementation of the Redux pattern using rxjs.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ophirbushi/roxanne.git"
+    },
+    "keywords": [
+        "rxjs",
+        "rx",
+        "simple",
+        "redux",
+        "typescript",
+        "state",
+        "state-management"
+    ],
+    "scripts": {
+        "prebuild": "rimraf ./dist",
+        "build": "tsc -p .",
+        "pretest": "tsc -p ./spec",
+        "test": "jasmine",
+        "demo": "tsc -p ./demo && node ./demo/dist/demo"
+    },
+    "author": "Ophir Bushinsky",
+    "license": "MIT",
+    "peerDependencies": {
+        "rxjs": ">=6.3.3"
+    },
+    "devDependencies": {
+        "@types/jasmine": "^2.8.6",
+        "jasmine": "^3.1.0",
+        "rimraf": "^2.6.3",
+        "rxjs": "^6.5.4",
+        "typescript": "^3.8.3"
+    }
 }

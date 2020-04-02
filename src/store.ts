@@ -43,4 +43,13 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
                 map(actionPayloadPair => <Actions[K]>actionPayloadPair.payload)
             );
     }
+
+    mount<K extends string, ChildState = any>(
+        propertyKey: K,
+        initialState: ChildState,
+        reducerOrReducers: ReducerFn | Array<ReducerFn>,
+    ) {
+        this.reducers = this.reducers.concat(reducerOrReducers as any);
+        this.next({ ...this.value, [propertyKey]: initialState });
+    }
 }
