@@ -39,7 +39,7 @@ const appReducer: ReducerFn<AppState, AppActions> = (state, action, payload) => 
 
 const store = new Store<AppState, AppActions>(appInitialState, appReducer);
 
-store.subscribe(console.log);
+store.subscribe(x => console.log(JSON.stringify(x)));
 
 store.dispatch('addItem', { name: 'item1', price: 1 });
 
@@ -51,6 +51,9 @@ interface CartActions {
     setCartItems: Item[];
 }
 
+const typedStore = retypeStore<AppState & { cart: Cart }, AppActions & CartActions>(store);
+typedStore.dispatch('setCartItems', [{ name: 'cartItem1', price: 2 }]);
+
 setTimeout(() => {
     let actionIs = generatePayloadTypeChecker<AppActions & CartActions>();
 
@@ -61,11 +64,6 @@ setTimeout(() => {
         return state;
     };
 
-    store.mount('cart', { items: [] } as Cart, cartReducer);
+    typedStore.mountChildState('cart', { items: [] } as Cart, cartReducer);
+    typedStore.dispatch('setCartItems', [{ name: 'cartItem2', price: 4 }]);
 }, 1000);
-
-
-const typedStore = retypeStore<AppState & { cart: Cart }, AppActions & CartActions>(store);
-typedStore.dispatch('setCartItems', [{ name: 'cartItem1', price: 2 }]);
-
-

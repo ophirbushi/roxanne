@@ -44,12 +44,12 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
             );
     }
 
-    mount<K extends string, ChildState = any>(
-        propertyKey: K,
-        initialState: ChildState,
+    mountChildState(
+        propertyKey: string,
+        initialState: any,
         reducerOrReducers: ReducerFn | Array<ReducerFn>,
     ) {
-        this.reducers = this.reducers.concat(reducerOrReducers as any);
+        this.reducers = this.reducers.concat(reducerOrReducers);
         this.next({ ...this.value, [propertyKey]: initialState });
     }
 }
