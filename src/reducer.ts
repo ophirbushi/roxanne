@@ -1,1 +1,1 @@
-export type ReducerFn<State, Actions> = (state: State, action: keyof Actions, payload: Actions[keyof Actions]) => State;
+export type ReducerFn<State, Actions> = (state: State, action: keyof Actions, payload: any) => State;
