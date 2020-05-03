@@ -22,7 +22,7 @@
         "build": "tsc -p .",
         "pretest": "tsc -p ./spec",
         "test": "jasmine",
-        "demo": "tsc -p ./demo && node ./demo/dist/demo"
+        "prepublish": "npm run build"
     },
     "author": "Ophir Bushinsky",
     "license": "MIT",
