@@ -1,3 +1,3 @@
-export * from './reducer';
+export * from './models';
 export * from './store';
 export * from './utils';
