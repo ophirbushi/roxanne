@@ -17,7 +17,16 @@ roxanne has a peer dependency of rxjs so you will need to install both.
 npm install roxanne rxjs
 ```
 
-## State 
+## Usage
+
+Let's quickly go over the main concepts: 
+
+* State
+* Actions
+* Reducer
+* Store
+
+### State 
 
 State is an interface representing your store's state.
 
@@ -31,7 +40,7 @@ export interface AppState {
 }
 ```
 
-## Actions
+### Actions
 
 Actions is an interface whose keys are the action's type, and their value is the action's payload.
 
@@ -45,7 +54,7 @@ export interface AppActions {
 }
 ```
 
-## Reducer
+### Reducer
 
 A reducer is a function which receives 3 arguments:
 
@@ -75,7 +84,7 @@ const appReducer: Reducer<AppState, AppActions> = (state, action, payload) => {
 );
 ```
 
-## Store
+### Store
 
 The store is the class that manages the app's state. It extends the rxjs' BehaviorSubject class.
 
