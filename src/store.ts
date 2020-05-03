@@ -19,13 +19,13 @@ export class Store<State, Actions> extends BehaviorSubject<State> {
     }
 
     dispatch<ActionType extends keyof Actions>(action: ActionType, payload: Actions[ActionType]) {
-        const oldValue = this.value;
-        const newValue = this.reducers.reduce((updatedState, reducer) => {
+        const oldState = this.value;
+        const newState = this.reducers.reduce((updatedState, reducer) => {
             return reducer(updatedState, action, payload);
-        }, oldValue);
+        }, oldState);
 
-        this.next(newValue);
-        this._actions$.next({ action, payload, oldValue, newValue });
+        this.next(newState);
+        this._actions$.next({ action, payload, oldState, newState });
     }
 
     select<K extends keyof State>(key: K): Observable<State[K]>
