@@ -18,7 +18,11 @@
         "state-management"
     ],
     "scripts": {
-        "prebuild": "rimraf ./dist",
+        "docs": "typedoc --out docs ./src --excludeNotExported --exclude \"**/*+(index|.spec|.e2e).ts\"",
+        "rm:dist": "rimraf ./dist",
+        "rm:docs": "rimraf ./docs",
+        "rm": "npm run rm:dist && npm run rm:docs",
+        "prebuild": "npm run test && npm run rm && npm run docs",
         "build": "tsc -p .",
         "pretest": "tsc -p ./spec",
         "test": "jasmine",
@@ -34,6 +38,7 @@
         "jasmine": "^3.1.0",
         "rimraf": "^2.6.3",
         "rxjs": "^6.5.4",
-        "typescript": "^3.8.3"
+        "typedoc": "^0.17.7",
+        "typescript": "^3.9.2"
     }
 }

@@ -1,4 +1,4 @@
-import { Store, ReducerFn, generatePayloadTypeChecker } from '../../src';
+import { Store, Reducer, generatePayloadTypeChecker } from '../../src';
 import { Subject } from 'rxjs';
 
 interface CalculatorState {
@@ -21,7 +21,7 @@ class Logger {
 
 describe('store', () => {
     let initialState: CalculatorState
-    let reducer: ReducerFn<CalculatorState, CalculatorActions>;
+    let reducer: Reducer<CalculatorState, CalculatorActions>;
     let store: Store<CalculatorState, CalculatorActions>;
     let logger: Logger;
 
