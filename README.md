@@ -19,7 +19,7 @@ npm install roxanne rxjs
 
 ## Usage
 
-[Demo (angular)](https://stackblitz.com/edit/angular-d9e5bq?file=src%2Fapp%2Fapp.module.ts)
+[Demo - angular (Still work in progress)](https://stackblitz.com/edit/angular-d9e5bq?file=src%2Fapp%2Fapp.module.ts)
 
 Let's quickly go over the main concepts:
 
