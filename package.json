@@ -1,9 +1,9 @@
 {
     "name": "roxanne",
-    "version": "3.0.0",
+    "version": "3.0.1-beta.0",
     "description": "roxanne is an implementation of the Redux pattern using rxjs.",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "dist/es2015/index.js",
+    "types": "dist/es2015/index.d.ts",
     "repository": {
         "type": "git",
         "url": "https://github.com/ophirbushi/roxanne.git"
@@ -22,8 +22,8 @@
         "rm:dist": "rimraf ./dist",
         "rm:docs": "rimraf ./docs",
         "rm": "npm run rm:dist && npm run rm:docs",
-        "prebuild": "npm run test && npm run rm && npm run docs",
-        "build": "tsc -p .",
+        "prebuild": "npm run test && npm run rm",
+        "build": "tsc -p ./tsconfig-es5.json && tsc -p ./tsconfig-es2015.json",
         "pretest": "tsc -p ./spec",
         "test": "jasmine",
         "prepublish": "npm run build"
